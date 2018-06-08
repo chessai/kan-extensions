@@ -74,7 +74,7 @@ import Control.Monad.Reader.Class as Reader
 import Control.Monad.State.Class
 import Control.Monad.Trans.Class
 import Control.Monad.Writer.Class as Writer
-import Data.Functor.Bind
+import Data.Functor.Semimonad
 import Data.Functor.Extend
 
 type Co w = CoT w Identity
@@ -94,10 +94,10 @@ newtype CoT w m a = CoT { runCoT :: forall r. w (a -> m r) -> m r }
 instance Functor w => Functor (CoT w m) where
   fmap f (CoT w) = CoT (w . fmap (. f))
 
-instance Extend w => Apply (CoT w m) where
+instance Extend w => Semiapplicative (CoT w m) where
   mf <.> ma = mf >>- \f -> fmap f ma
 
-instance Extend w => Bind (CoT w m) where
+instance Extend w => Semimonad (CoT w m) where
   CoT k >>- f = CoT (k . extended (\wa a -> runCoT (f a) wa))
 
 instance Comonad w => Applicative (CoT w m) where

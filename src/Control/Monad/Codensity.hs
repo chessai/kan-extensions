@@ -47,7 +47,7 @@ import Control.Monad.Reader.Class
 import Control.Monad.State.Class
 import Control.Monad.Trans.Class
 import Data.Functor.Adjunction
-import Data.Functor.Apply
+import Data.Functor.Semiapplicative
 import Data.Functor.Kan.Ran
 import Data.Functor.Plus
 import Data.Functor.Rep
@@ -92,9 +92,9 @@ instance Functor (Codensity k) where
   {-# INLINE fmap #-}
 
 #if __GLASGOW_HASKELL__ >= 802
-instance Apply (Codensity (f :: k -> TYPE rep)) where
+instance Semiapplicative (Codensity (f :: k -> TYPE rep)) where
 #else
-instance Apply (Codensity f) where
+instance Semiapplicative (Codensity f) where
 #endif
   (<.>) = (<*>)
   {-# INLINE (<.>) #-}

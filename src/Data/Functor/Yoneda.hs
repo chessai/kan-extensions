@@ -46,15 +46,15 @@ import Control.Comonad.Trans.Class
 import Data.Distributive
 import Data.Foldable
 import Data.Functor.Adjunction
-import Data.Functor.Bind
+import Data.Functor.Semimonad
 import Data.Functor.Classes
 import Data.Functor.Extend
 import Data.Functor.Identity
 import Data.Functor.Kan.Ran
 import Data.Functor.Plus
 import Data.Functor.Rep
-import Data.Semigroup.Foldable
-import Data.Semigroup.Traversable
+import Data.Semigroup.Semifoldable
+import Data.Semigroup.Semitraversable
 import Data.Traversable
 import Text.Read hiding (lift)
 import Prelude hiding (sequence, lookup, zipWith)
@@ -114,7 +114,7 @@ instance Functor (Yoneda f) where
   fmap f m = Yoneda (\k -> runYoneda m (k . f))
   {-# INLINE fmap #-}
 
-instance Apply f => Apply (Yoneda f) where
+instance Semiapplicative f => Semiapplicative (Yoneda f) where
   Yoneda m <.> Yoneda n = Yoneda (\f -> m (f .) <.> n id)
   {-# INLINE (<.>) #-}
 
@@ -128,17 +128,17 @@ instance Foldable f => Foldable (Yoneda f) where
   foldMap f = foldMap f . lowerYoneda
   {-# INLINE foldMap #-}
 
-instance Foldable1 f => Foldable1 (Yoneda f) where
-  foldMap1 f = foldMap1 f . lowerYoneda
-  {-# INLINE foldMap1 #-}
+instance Semifoldable f => Semifoldable (Yoneda f) where
+  semifoldMap f = semifoldMap f . lowerYoneda
+  {-# INLINE semifoldMap #-}
 
 instance Traversable f => Traversable (Yoneda f) where
   traverse f = fmap liftYoneda . traverse f . lowerYoneda
   {-# INLINE traverse #-}
 
-instance Traversable1 f => Traversable1 (Yoneda f) where
-  traverse1 f = fmap liftYoneda . traverse1 f . lowerYoneda
-  {-# INLINE traverse1 #-}
+instance Semitraversable f => Semitraversable (Yoneda f) where
+  semitraverse f = fmap liftYoneda . semitraverse f . lowerYoneda
+  {-# INLINE semitraverse #-}
 
 instance Distributive f => Distributive (Yoneda f) where
   collect f = liftYoneda . collect (lowerYoneda . f)
@@ -259,7 +259,7 @@ instance Alternative f => Alternative (Yoneda f) where
   Yoneda f <|> Yoneda g = Yoneda (\k -> f k <|> g k)
   {-# INLINE (<|>) #-}
 
-instance Bind m => Bind (Yoneda m) where
+instance Semimonad m => Semimonad (Yoneda m) where
   Yoneda m >>- k = Yoneda (\f -> m id >>- \a -> runYoneda (k a) f)
   {-# INLINE (>>-) #-}
 

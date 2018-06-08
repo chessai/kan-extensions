@@ -41,7 +41,7 @@ import Data.Distributive
 import Data.Function (on)
 #endif
 import Data.Functor.Adjunction
-import Data.Functor.Bind
+import Data.Functor.Semimonad
 import Data.Functor.Classes
 import Data.Functor.Extend
 import Data.Functor.Identity
@@ -50,8 +50,8 @@ import Data.Functor.Plus
 import Data.Functor.Rep
 import Data.Foldable
 import Data.Traversable
-import Data.Semigroup.Foldable
-import Data.Semigroup.Traversable
+import Data.Semigroup.Semifoldable
+import Data.Semigroup.Semitraversable
 import Prelude hiding (sequence, lookup, zipWith)
 import Text.Read hiding (lift)
 
@@ -90,7 +90,7 @@ instance Functor (Coyoneda f) where
   fmap f (Coyoneda g v) = Coyoneda (f . g) v
   {-# INLINE fmap #-}
 
-instance Apply f => Apply (Coyoneda f) where
+instance Semiapplicative f => Semiapplicative (Coyoneda f) where
   Coyoneda mf m <.> Coyoneda nf n =
     liftCoyoneda $ (\mres nres -> mf mres (nf nres)) <$> m <.> n
   {-# INLINE (<.>) #-}
@@ -145,7 +145,7 @@ instance Plus f => Plus (Coyoneda f) where
   zero = liftCoyoneda zero
   {-# INLINE zero #-}
 
-instance Bind m => Bind (Coyoneda m) where
+instance Semimonad m => Semimonad (Coyoneda m) where
   Coyoneda f v >>- k = liftCoyoneda (v >>- lowerCoyoneda . k . f)
   {-# INLINE (>>-) #-}
 
@@ -204,17 +204,17 @@ instance Foldable f => Foldable (Coyoneda f) where
   foldMap f (Coyoneda k a) = foldMap (f . k) a
   {-# INLINE foldMap #-}
 
-instance Foldable1 f => Foldable1 (Coyoneda f) where
-  foldMap1 f (Coyoneda k a) = foldMap1 (f . k) a
-  {-# INLINE foldMap1 #-}
+instance Semifoldable f => Semifoldable (Coyoneda f) where
+  semifoldMap f (Coyoneda k a) = semifoldMap (f . k) a
+  {-# INLINE semifoldMap #-}
 
 instance Traversable f => Traversable (Coyoneda f) where
   traverse f (Coyoneda k a) = Coyoneda id <$> traverse (f . k) a
   {-# INLINE traverse #-}
 
-instance Traversable1 f => Traversable1 (Coyoneda f) where
-  traverse1 f (Coyoneda k a) = Coyoneda id <$> traverse1 (f . k) a
-  {-# INLINE traverse1 #-}
+instance Semitraversable f => Semitraversable (Coyoneda f) where
+  semitraverse f (Coyoneda k a) = Coyoneda id <$> semitraverse (f . k) a
+  {-# INLINE semitraverse #-}
 
 instance Distributive f => Distributive (Coyoneda f) where
   collect f = liftCoyoneda . collect (lowerCoyoneda . f)

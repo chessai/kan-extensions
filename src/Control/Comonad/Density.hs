@@ -35,7 +35,7 @@ module Control.Comonad.Density
 import Control.Applicative
 import Control.Comonad
 import Control.Comonad.Trans.Class
-import Data.Functor.Apply
+import Data.Functor.Semiapplicative
 import Data.Functor.Adjunction
 import Data.Functor.Extend
 import Data.Functor.Kan.Lan
@@ -61,7 +61,7 @@ instance ComonadTrans Density where
   lower (Density f c) = extend f c
   {-# INLINE lower #-}
 
-instance Apply f => Apply (Density f) where
+instance Semiapplicative f => Semiapplicative (Density f) where
   Density kxf x <.> Density kya y =
     Density (\k -> kxf (fmap fst k) (kya (fmap snd k))) ((,) <$> x <.> y)
   {-# INLINE (<.>) #-}

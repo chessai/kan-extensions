@@ -188,7 +188,7 @@ elim2 (Day fb (Identity c) bca) = flip bca c <$> fb
 dap :: Applicative f => Day f f a -> f a
 dap (Day fb fc abc) = liftA2 abc fb fc
 
--- | Apply a natural transformation to the left-hand side of a Day convolution.
+-- | Semiapplicative a natural transformation to the left-hand side of a Day convolution.
 --
 -- This respects the naturality of the natural transformation you supplied:
 --
@@ -198,7 +198,7 @@ dap (Day fb fc abc) = liftA2 abc fb fc
 trans1 :: (forall x. f x -> g x) -> Day f h a -> Day g h a
 trans1 fg (Day fb hc bca) = Day (fg fb) hc bca
 
--- | Apply a natural transformation to the right-hand side of a Day convolution.
+-- | Semiapplicative a natural transformation to the right-hand side of a Day convolution.
 --
 -- This respects the naturality of the natural transformation you supplied:
 --

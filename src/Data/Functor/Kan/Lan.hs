@@ -31,7 +31,7 @@ module Data.Functor.Kan.Lan
 
 import Control.Applicative
 import Data.Functor.Adjunction
-import Data.Functor.Apply
+import Data.Functor.Semiapplicative
 import Data.Functor.Composition
 import Data.Functor.Identity
 
@@ -43,7 +43,7 @@ instance Functor (Lan f g) where
   fmap f (Lan g h) = Lan (f . g) h
   {-# INLINE fmap #-}
 
-instance (Functor g, Apply h) => Apply (Lan g h) where
+instance (Functor g, Semiapplicative h) => Semiapplicative (Lan g h) where
   Lan kxf x <.> Lan kya y =
     Lan (\k -> kxf (fmap fst k) (kya (fmap snd k))) ((,) <$> x <.> y)
   {-# INLINE (<.>) #-}

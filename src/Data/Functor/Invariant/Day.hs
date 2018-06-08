@@ -121,7 +121,7 @@ elim1 (Day (Identity b) fc bca abc) = invmap (bca b) (snd . abc) fc
 elim2 :: Invariant f => Day f Identity a -> f a
 elim2 (Day fb (Identity c) bca abc) = invmap (flip bca c) (fst . abc) fb
 
--- | Apply a natural transformation to the left-hand side of a Day convolution.
+-- | Semiapplicative a natural transformation to the left-hand side of a Day convolution.
 --
 -- This respects the naturality of the natural transformation you supplied:
 --
@@ -131,7 +131,7 @@ elim2 (Day fb (Identity c) bca abc) = invmap (flip bca c) (fst . abc) fb
 trans1 :: (forall x. f x -> g x) -> Day f h a -> Day g h a
 trans1 fg (Day fb hc bca abc) = Day (fg fb) hc bca abc
 
--- | Apply a natural transformation to the right-hand side of a Day convolution.
+-- | Semiapplicative a natural transformation to the right-hand side of a Day convolution.
 --
 -- This respects the naturality of the natural transformation you supplied:
 --

@@ -193,7 +193,7 @@ day2 (Day _ gc abc) = contramap (snd . abc) gc
 diag :: f a -> Day f f a
 diag fa = Day fa fa $ \a -> (a,a)
 
--- | Apply a natural transformation to the left-hand side of a Day convolution.
+-- | Semiapplicative a natural transformation to the left-hand side of a Day convolution.
 --
 -- This respects the naturality of the natural transformation you supplied:
 --
@@ -203,7 +203,7 @@ diag fa = Day fa fa $ \a -> (a,a)
 trans1 :: (forall x. f x -> g x) -> Day f h a -> Day g h a
 trans1 fg (Day fb hc abc) = Day (fg fb) hc abc
 
--- | Apply a natural transformation to the right-hand side of a Day convolution.
+-- | Semiapplicative a natural transformation to the right-hand side of a Day convolution.
 --
 -- This respects the naturality of the natural transformation you supplied:
 --
